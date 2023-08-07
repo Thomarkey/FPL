@@ -1,2 +1,4 @@
-package com.example.FPL.Scraper;public class FPLScraper {
+package com.example.FPL.Scraper;
+
+public class FPLWebScraper {
 }

@@ -1,2 +1,21 @@
-package com.example.FPL.Model;public class Team {
+package com.example.FPL.Model;
+
+public enum Team {
+    AA_GENT,
+    CERLCE_BRUGGE,
+    CLUB_BRUGGE,
+    KAS_EUPEN,
+    KRC_GENK,
+    KV_KORTRIJK,
+    KV_MECHELEN,
+    KVC_WESTERLO,
+    OH_LEUVEN,
+    ROYAL_ANTWERP_FC,
+    ROYALE_UNION_SAINTGILLOISE,
+    RSC_ANDERLECHT,
+    RWDM,
+    SPORTING_CHARLEROI,
+    STANDERD_DE_LIEGE,
+    STVV,
+
 }

@@ -1,2 +1,4 @@
-package com.example.FPL.Service;public class PlayerService {
+package com.example.FPL.Service;
+
+public class PlayerService {
 }

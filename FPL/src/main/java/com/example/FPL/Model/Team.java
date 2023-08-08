@@ -2,7 +2,7 @@ package com.example.FPL.Model;
 
 public enum Team {
     AA_GENT,
-    CERLCE_BRUGGE,
+    CERCLE_BRUGGE,
     CLUB_BRUGGE,
     KAS_EUPEN,
     KRC_GENK,
@@ -11,11 +11,24 @@ public enum Team {
     KVC_WESTERLO,
     OH_LEUVEN,
     ROYAL_ANTWERP_FC,
-    ROYALE_UNION_SAINTGILLOISE,
+    ROYALE_UNION_SAINT_GILLOISE("Royale Union Saint-Gilloise"),
     RSC_ANDERLECHT,
     RWDM,
     SPORTING_CHARLEROI,
-    STANDERD_DE_LIEGE,
-    STVV,
+    STANDARD_DE_LIEGE("Standard de Liège"),
+    STVV;
 
+    private final String alternativeName;
+
+    Team() {
+        this.alternativeName = null;
+    }
+
+    Team(String alternativeName) {
+        this.alternativeName = alternativeName;
+    }
+
+    public String getAlternativeName() {
+        return alternativeName;
+    }
 }

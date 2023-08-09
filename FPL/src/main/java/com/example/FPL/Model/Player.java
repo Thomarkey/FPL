@@ -20,10 +20,16 @@ public class Player {
     @Enumerated(EnumType.STRING)
 
     private Position position;
-    @ElementCollection
+
+    @ElementCollection(fetch = FetchType.EAGER) //fetch the stats collection eagerly instead of lazily to handle LazyInitializationException.
     @CollectionTable(name = "player_stats", joinColumns = @JoinColumn(name = "player_id"))
     @MapKeyEnumerated(EnumType.STRING)
     private Map<StatName, Integer> stats;
+
+    public Player() {
+        // Default constructor
+        //When using JPA (Java Persistence API), it's required to have a default constructor for your entity classes.
+    }
 
     public Player(String name, Team team, Position position) {
         this.name = name;
@@ -42,8 +48,6 @@ public class Player {
 
         return initializedStats;
     }
-
-
 
     public String getName() {
         return name;

@@ -11,7 +11,7 @@ import java.util.Map;
 public class MatchPage extends GenericAbstractPage {
 
     @FindBy(css = ".teamPlayer")
-    List<WebElement> players;
+    List<WebElement> startingPlayers;
 
     @FindBy(css = ".substitutes-player")
     List<WebElement> substitutePlayers;
@@ -19,17 +19,17 @@ public class MatchPage extends GenericAbstractPage {
 
     public Map<String, Map<String, String>> scrapeStats() {
         Map<String, Map<String, String>> playerStatsHashMap = new HashMap<>();
-        for (int i = 0; i < players.size(); i++) {
-            WebElement player = players.get(i);
+        for (int i = 0; i < startingPlayers.size(); i++) {
+            WebElement player = startingPlayers.get(i);
             player.click();
-            Map<String, Map<String, String>> playerStats = new PlayerMatchStatsPage().readPlayerStats(i);
+            Map<String, Map<String, String>> playerStats = new PlayerMatchStatsPage().readPlayerStats(true, i);
             playerStatsHashMap.putAll(playerStats);
         }
 
-        for (int i = 0, counter = players.size(); i < substitutePlayers.size(); i++) {
+        for (int i = 0, counter = startingPlayers.size(); i < substitutePlayers.size(); i++) {
             WebElement player = substitutePlayers.get(i);
             player.click();
-            Map<String, Map<String, String>> playerStats = new PlayerMatchStatsPage().readPlayerStats(counter + i);
+            Map<String, Map<String, String>> playerStats = new PlayerMatchStatsPage().readPlayerStats(false, counter + i);
             playerStatsHashMap.putAll(playerStats);
         }
 

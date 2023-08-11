@@ -1,12 +1,59 @@
-<p>player-list</p>
-<div *ngFor="let player of players">
-    <h2>{{ player.name }}</h2>
-    <p>Team: {{ player.team }}</p>
-    <p>Position: {{ player.position }}</p>
-    <p>Stats: </p>
+<p>PlayerStats</p>
+<div class="player-list-container">
+    <table class="player-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Team</th>
+                <th>Position</th>
+                <th *ngFor="let stat of players[0]?.stats  | keyvalue">{{ stat.key | statNameDisplay}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let player of players.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
+                (click)="showPlayerDetails(player)">
+                <td>{{ player.name }}</td>
+                <td>{{ player.team | teamDisplay}}</td>
+                <td>{{ player.position | positionDisplay }}</td> <!-- Use the function to display position -->
+                <td *ngFor="let stat of player.stats |  keyvalue "> {{ stat.value }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button class="previousBtn" (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">&lt;</button>
+        <button (click)="currentPage = 1" [class.active]="currentPage === 1">1</button>
+        <ng-container *ngIf="currentPage > 4">
+            <span class="disabled">...</span>
+        </ng-container>
+        <ng-container *ngFor="let num of getVisiblePageNumbers()">
+            <button (click)="currentPage = num" [class.active]="num === currentPage">{{ num }}</button>
+        </ng-container>
+        <ng-container *ngIf="currentPage < getTotalPages() - 3">
+            <span class="disabled">...</span>
+        </ng-container>
+        <button (click)="currentPage = getTotalPages()" [class.active]="currentPage === getTotalPages()">{{
+            getTotalPages()}}</button>
+        <button class="nextBtn" (click)="currentPage = currentPage + 1"
+            [disabled]="currentPage === getTotalPages()">&gt;</button>
+    </div>
+
+
+
+
+
+</div>
+
+
+<!-- <div *ngIf="selectedPlayer">
+    <h2>Details for {{ selectedPlayer.name }}</h2>
+    <p>Team: {{ selectedPlayer.team }}</p>
+    <p>Position: {{ selectedPlayer.position }}</p>
+    <p>Stats:</p>
     <ul>
-        <li *ngFor="let stat of player.stats | keyvalue">
+        <li *ngFor="let stat of selectedPlayer.stats | keyvalue">
             {{ stat.key }}: {{ stat.value }}
         </li>
     </ul>
-</div>
+</div> -->

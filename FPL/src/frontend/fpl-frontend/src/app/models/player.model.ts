@@ -1,5 +1,5 @@
 import { Position } from "./position.enum";
-import { StatName } from "./statname.enum";
+import { StatName } from "./statName.enum";
 import { Team } from "./team.enum";
 
 export interface Player {

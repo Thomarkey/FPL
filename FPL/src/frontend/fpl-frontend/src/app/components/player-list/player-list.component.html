@@ -1,0 +1,12 @@
+<p>player-list</p>
+<div *ngFor="let player of players">
+    <h2>{{ player.name }}</h2>
+    <p>Team: {{ player.team }}</p>
+    <p>Position: {{ player.position }}</p>
+    <p>Stats: </p>
+    <ul>
+        <li *ngFor="let stat of player.stats | keyvalue">
+            {{ stat.key }}: {{ stat.value }}
+        </li>
+    </ul>
+</div>

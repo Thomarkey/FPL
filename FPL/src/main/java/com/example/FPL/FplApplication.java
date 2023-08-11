@@ -69,7 +69,7 @@ public class FplApplication {
         // Update players' stats in db
 		webScraper.scrapeAndUpdateStats();
 
-        context.close();
+//        context.close();
     }
 
 }

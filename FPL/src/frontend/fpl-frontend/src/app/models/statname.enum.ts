@@ -22,3 +22,12 @@ export enum StatName {
     MEER_DUELS_GEWONNEN = 'MEER_DUELS_GEWONNEN_DAN_VERLOREN',
     MEER_DAN_1_INTERCEPTIE = 'MEER_DAN_1_RECOVERIES'
 }
+
+export function getStatNameDisplayName(statName: StatName): string {
+    const words = statName.toLowerCase().split('_');
+    for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].slice(1);
+    }
+    return words.join(' ');
+}
+

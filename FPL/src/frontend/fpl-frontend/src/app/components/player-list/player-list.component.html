@@ -1,4 +1,27 @@
 <p>PlayerStats</p>
+
+<div class="dropdown-container">
+    <label for="statsDropdown">Filter stats:</label>
+    <div class="dropdown" #dropdown>
+        <button class="dropdown-button" (click)="toggleDropdown()">
+            <span>{{ selectedStats.size }} selected</span>
+        </button>
+        <div class="dropdown-content" *ngIf="isDropdownOpen">
+            <div *ngFor="let stat of players[0]?.stats | keyvalue">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="checkbox-input" [checked]="selectedStats.has(stat.key)"
+                        (change)="toggleStat(stat.key)" />
+                    <span class="custom-checkbox"></span>
+                    {{ stat.key | statNameDisplay }}
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 <div class="player-list-container">
     <table class="player-table">
         <thead>
@@ -6,17 +29,23 @@
                 <th>Name</th>
                 <th>Team</th>
                 <th>Position</th>
-                <th *ngFor="let stat of players[0]?.stats  | keyvalue">{{ stat.key | statNameDisplay}}</th>
-            </tr>
+                <ng-container *ngFor="let stat of players[0]?.stats | keyvalue">
+                    <th *ngIf="selectedStats.has(stat.key)">{{ stat.key | statNameDisplay }}</th>
+                </ng-container>
         </thead>
         <tbody>
             <tr *ngFor="let player of players.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
                 (click)="showPlayerDetails(player)">
                 <td>{{ player.name }}</td>
                 <td>{{ player.team | teamDisplay}}</td>
-                <td>{{ player.position | positionDisplay }}</td> <!-- Use the function to display position -->
-                <td *ngFor="let stat of player.stats |  keyvalue "> {{ stat.value }}
-                </td>
+                <td>{{ player.position | positionDisplay }}</td>
+
+                <!-- <td *ngFor="let stat of player.stats |  keyvalue "> {{ stat.value }} -->
+
+                <ng-container *ngFor="let stat of player.stats | keyvalue">
+                    <td *ngIf="selectedStats.has(stat.key)">{{ stat.value }}</td>
+                </ng-container>
+
             </tr>
         </tbody>
     </table>

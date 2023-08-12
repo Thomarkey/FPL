@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Player } from 'src/app/models/player.model';
 import { PlayerService } from 'src/app/services/player.service';
-import { getPositionDisplayName } from 'src/app/models/position.enum';
+import { StatName } from 'src/app/models/statName.enum';
 
 
 @Component({
@@ -13,6 +13,36 @@ export class PlayerListComponent {
 
   players: Player[] = [];
   selectedPlayer: Player | null = null;
+  selectedStats: Set<StatName> = new Set(); // Initialize selectedStats Set
+  preSelectedStats: StatName[] = [StatName.GAME_STARTED]; // Add more if needed
+  isDropdownOpen: boolean = false;
+
+  @ViewChild('dropdown', { read: ElementRef }) dropdownRef!: ElementRef;
+
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    if (this.isDropdownOpen) {
+      const isClickedInside = this.dropdownRef.nativeElement.contains(event.target);
+      if (!isClickedInside) {
+        this.isDropdownOpen = false;
+      }
+    }
+  }
+
+
+  toggleStat(stat: StatName): void {
+    if (this.selectedStats.has(stat)) {
+      this.selectedStats.delete(stat);
+    } else {
+      this.selectedStats.add(stat);
+    }
+  }
+
+  //PAGINATION
   currentPage: number = 1;
   playersPerPage: number = 10;
   totalPages: number = this.getTotalPages();
@@ -22,6 +52,8 @@ export class PlayerListComponent {
   ngOnInit(): void {
     this.playerService.getAllPlayers().subscribe((data: Player[]) => {
       this.players = data;
+      // Initialize selectedStats with pre-selected stats
+      this.preSelectedStats.forEach(stat => this.selectedStats.add(stat));
     });
   };
 

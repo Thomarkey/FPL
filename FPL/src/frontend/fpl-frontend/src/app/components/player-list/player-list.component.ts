@@ -23,6 +23,7 @@ export class PlayerListComponent {
       this.players = data;
       // Initialize selectedStats with pre-selected stats
       this.preSelectedStats.forEach(stat => this.selectedStats.add(stat));
+      this.filteredPlayers = [...this.players];
     });
   };
 
@@ -40,9 +41,10 @@ export class PlayerListComponent {
     this.sort();
   }
 
+  //TODO: check sort while searching for player (sort not updated/following on the fly)
   sort(): void {
     if (this.sortBy) {
-      this.players.sort((a, b) => {
+      this.filteredPlayers.sort((a, b) => {
         const aValue = a.stats[this.sortBy!] || 0;
         const bValue = b.stats[this.sortBy!] || 0;
         return this.sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
@@ -54,7 +56,23 @@ export class PlayerListComponent {
     return key as StatName;
   }
 
-  //DROPDOWN
+  //SEARCH FCTION
+  searchQuery: string = '';
+  filteredPlayers: Player[] = [];
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.performSearch();
+  }
+
+  performSearch(): void {
+    const lowerCaseQuery = this.searchQuery.toLowerCase();
+    this.filteredPlayers = this.players.filter(player =>
+      player.name.toLowerCase().includes(lowerCaseQuery)
+    );
+  }
+
+  //FILTER DROPDOWN
   isDropdownOpen: boolean = false;
   @ViewChild('dropdown', { read: ElementRef }) dropdownRef!: ElementRef;
 

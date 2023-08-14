@@ -1,5 +1,16 @@
 <p>PlayerStats</p>
 
+<div class="search-container">
+    <label for="searchInput">Search:</label>
+    <div class="search-input-wrapper">
+        <span class="search-icon"></span>
+        <div class="fa fa-search"></div>
+        <input type="text" id="searchInput" placeholder=" Search by name" [(ngModel)]="searchQuery"
+            (input)="performSearch()" />
+    </div>
+    <button class="clear-button" (click)="clearSearch()">Clear</button>
+</div>
+
 <div class="dropdown-container">
     <label for="statsDropdown">Filter stats:</label>
     <div class="dropdown" #dropdown>
@@ -40,7 +51,9 @@
                 </ng-container>
         </thead>
         <tbody>
-            <tr *ngFor="let player of players.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
+            <!-- <tr *ngFor="let player of players.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
+                (click)="showPlayerDetails(player)"> -->
+            <tr *ngFor="let player of filteredPlayers.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
                 (click)="showPlayerDetails(player)">
                 <td>{{ player.name }}</td>
                 <td>{{ player.team | teamDisplay}}</td>

@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TeamDisplayPipe } from './pipes/team-display.pipe';
 import { PositionDisplayPipe } from './pipes/position-display.pipe';
 import { StatNameDisplayPipe } from './pipes/statName-display.pipe';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { StatNameDisplayPipe } from './pipes/statName-display.pipe';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

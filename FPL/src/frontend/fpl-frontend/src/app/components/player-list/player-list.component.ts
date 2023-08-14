@@ -66,6 +66,7 @@ export class PlayerListComponent {
   }
 
   performSearch(): void {
+    this.currentPage = 1;
     const lowerCaseQuery = this.searchQuery.toLowerCase();
     this.filteredPlayers = this.players.filter(player =>
       player.name.toLowerCase().includes(lowerCaseQuery)
@@ -106,7 +107,7 @@ export class PlayerListComponent {
 
   getVisiblePageNumbers(): number[] {
     const visiblePages: number[] = [];
-    const totalPages = Math.ceil(this.players.length / this.playersPerPage);
+    const totalPages = Math.ceil(this.filteredPlayers.length / this.playersPerPage);
 
     if (totalPages <= 7) {
       for (let i = 2; i < totalPages; i++) {
@@ -132,7 +133,7 @@ export class PlayerListComponent {
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.players.length / this.playersPerPage);
+    return Math.ceil(this.filteredPlayers.length / this.playersPerPage);
   }
 
 

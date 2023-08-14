@@ -3,7 +3,6 @@
 <div class="search-container">
     <label for="searchInput">Search:</label>
     <div class="search-input-wrapper">
-        <span class="search-icon"></span>
         <div class="fa fa-search"></div>
         <input type="text" id="searchInput" placeholder=" Search by name" [(ngModel)]="searchQuery"
             (input)="performSearch()" />
@@ -81,7 +80,8 @@
         <ng-container *ngIf="currentPage < getTotalPages() - 3">
             <span class="disabled">...</span>
         </ng-container>
-        <button (click)="currentPage = getTotalPages()" [class.active]="currentPage === getTotalPages()">{{
+        <button *ngIf="getTotalPages() !==1" (click)="currentPage = getTotalPages()"
+            [class.active]="currentPage === getTotalPages()">{{
             getTotalPages()}}</button>
         <button class="nextBtn" (click)="currentPage = currentPage + 1"
             [disabled]="currentPage === getTotalPages()">&gt;</button>

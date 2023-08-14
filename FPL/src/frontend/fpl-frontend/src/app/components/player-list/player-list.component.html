@@ -9,8 +9,9 @@
         <div class="dropdown-content" *ngIf="isDropdownOpen">
             <div *ngFor="let stat of players[0]?.stats | keyvalue">
                 <label class="checkbox-label">
-                    <input type="checkbox" class="checkbox-input" [checked]="selectedStats.has(stat.key)"
-                        (change)="toggleStat(stat.key)" />
+                    <input type="checkbox" class="checkbox-input"
+                        [checked]="selectedStats.has(castToStatName(stat.key))"
+                        (change)="toggleStat(castToStatName(stat.key))" />
                     <span class="custom-checkbox"></span>
                     {{ stat.key | statNameDisplay }}
                 </label>
@@ -29,8 +30,13 @@
                 <th>Name</th>
                 <th>Team</th>
                 <th>Position</th>
-                <ng-container *ngFor="let stat of players[0]?.stats | keyvalue">
-                    <th *ngIf="selectedStats.has(stat.key)">{{ stat.key | statNameDisplay }}</th>
+                <ng-container *ngFor=" let stat of players[0]?.stats | keyvalue">
+                    <th class="statColumn" *ngIf="selectedStats.has(castToStatName(stat.key))"
+                        (click)="toggleSort(castToStatName(stat.key))">
+                        {{ stat.key | statNameDisplay }}
+                        <span class="sort-by" *ngIf="sortBy === stat.key" [class.asc]="sortDirection === 'asc'"
+                            [class.desc]="sortDirection === 'desc'"></span>
+                    </th>
                 </ng-container>
         </thead>
         <tbody>
@@ -43,7 +49,7 @@
                 <!-- <td *ngFor="let stat of player.stats |  keyvalue "> {{ stat.value }} -->
 
                 <ng-container *ngFor="let stat of player.stats | keyvalue">
-                    <td *ngIf="selectedStats.has(stat.key)">{{ stat.value }}</td>
+                    <td *ngIf="selectedStats.has(castToStatName(stat.key))">{{ stat.value }}</td>
                 </ng-container>
 
             </tr>

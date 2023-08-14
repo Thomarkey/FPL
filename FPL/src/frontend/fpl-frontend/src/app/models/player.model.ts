@@ -7,5 +7,6 @@ export interface Player {
     name: string;
     team: Team;
     position: Position;
-    stats: Map<StatName, number>;
+    // stats: Map<StatName, number>;
+    stats: Record<StatName, number>;
 }

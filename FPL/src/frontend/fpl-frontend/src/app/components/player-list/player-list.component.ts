@@ -15,8 +15,47 @@ export class PlayerListComponent {
   selectedPlayer: Player | null = null;
   selectedStats: Set<StatName> = new Set(); // Initialize selectedStats Set
   preSelectedStats: StatName[] = [StatName.GAME_STARTED]; // Add more if needed
-  isDropdownOpen: boolean = false;
 
+  constructor(private playerService: PlayerService) { }
+
+  ngOnInit(): void {
+    this.playerService.getAllPlayers().subscribe((data: Player[]) => {
+      this.players = data;
+      // Initialize selectedStats with pre-selected stats
+      this.preSelectedStats.forEach(stat => this.selectedStats.add(stat));
+    });
+  };
+
+  //SORTING OF STAT COLUMNS
+  sortDirection: 'asc' | 'desc' = 'asc';
+  sortBy: StatName | null = null;
+
+  toggleSort(stat: StatName): void {
+    if (this.sortBy === stat) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = stat;
+      this.sortDirection = 'desc';
+    }
+    this.sort();
+  }
+
+  sort(): void {
+    if (this.sortBy) {
+      this.players.sort((a, b) => {
+        const aValue = a.stats[this.sortBy!] || 0;
+        const bValue = b.stats[this.sortBy!] || 0;
+        return this.sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+      });
+    }
+  }
+
+  castToStatName(key: string): StatName {
+    return key as StatName;
+  }
+
+  //DROPDOWN
+  isDropdownOpen: boolean = false;
   @ViewChild('dropdown', { read: ElementRef }) dropdownRef!: ElementRef;
 
   toggleDropdown(): void {
@@ -47,22 +86,6 @@ export class PlayerListComponent {
   playersPerPage: number = 10;
   totalPages: number = this.getTotalPages();
 
-  constructor(private playerService: PlayerService) { }
-
-  ngOnInit(): void {
-    this.playerService.getAllPlayers().subscribe((data: Player[]) => {
-      this.players = data;
-      // Initialize selectedStats with pre-selected stats
-      this.preSelectedStats.forEach(stat => this.selectedStats.add(stat));
-    });
-  };
-
-  showPlayerDetails(player: Player): void {
-    this.selectedPlayer = player; // Set the selected player
-  }
-
-
-  //PAGINATION
   getVisiblePageNumbers(): number[] {
     const visiblePages: number[] = [];
     const totalPages = Math.ceil(this.players.length / this.playersPerPage);
@@ -92,6 +115,13 @@ export class PlayerListComponent {
 
   getTotalPages(): number {
     return Math.ceil(this.players.length / this.playersPerPage);
+  }
+
+
+  //PLAYER DETAILS
+  showPlayerDetails(player: Player): void {
+    //TODO
+    this.selectedPlayer = player; // Set the selected player
   }
 
 

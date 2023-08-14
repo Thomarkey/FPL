@@ -19,9 +19,27 @@ th {
   color: rgb(0, 250, 250) !important;
   background-color: rgb(22, 0, 43) !important;
   font-weight: bold;
+  cursor: default;
 }
 
-tr:hover {
+th.statColumn {
+  cursor: pointer;
+}
+
+/* Apply styles to the ascending sort icon */
+.sort-by.asc::before {
+  content: '\2191';
+  font-weight: bolder;
+}
+
+/* Apply styles to the descending sort icon */
+.sort-by.desc::before {
+  content: '\2193';
+  font-weight: bolder;
+}
+
+
+tbody tr:hover {
   background-color: #f2f2f2;
   cursor: pointer;
 }

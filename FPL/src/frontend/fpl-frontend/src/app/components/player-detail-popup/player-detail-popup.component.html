@@ -1,0 +1,61 @@
+<div *ngIf="selectedPlayer">
+    <div class="player-detail-popup">
+        <div class="header">
+            <h2>{{ selectedPlayer.name }}
+                <button class="close-button" (click)="closePopup()">X</button>
+            </h2>
+        </div>
+        <div class="subTitle">
+            <span class="position">{{ selectedPlayer.position }}</span>
+            <span>{{ selectedPlayer.team }}</span>
+        </div>
+
+        <div class="stats-table">
+            <div class="stats-half">
+                <table>
+                    <tbody>
+                        <tr *ngFor="let stat of playerStatsFirstHalf">
+                            <td>{{ stat | statNameDisplay }}</td>
+                            <td>{{ selectedPlayer.stats[stat]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="stats-half">
+                <table>
+                    <tbody>
+                        <tr *ngFor="let stat of playerStatsSecondHalf">
+                            <td>{{ stat | statNameDisplay }}</td>
+                            <td>{{ selectedPlayer.stats[stat]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- <div class="player-detail-popup">
+    <button class="close-button" (click)="closePopup()">X</button>
+    <h2>Player Details</h2>
+    <p>Name: {{ selectedPlayer?.name }}</p>
+    <p>Team: {{ selectedPlayer?.team }}</p>
+    <p>Position: {{ selectedPlayer?.position }}</p>
+
+
+    <table class="player-stats-table">
+        <thead>
+            <tr>
+                <th>Stat</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let stat of selectedPlayer?.stats | keyvalue">
+                <td>{{ stat.key }}</td>
+                <td>{{ stat.value }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->

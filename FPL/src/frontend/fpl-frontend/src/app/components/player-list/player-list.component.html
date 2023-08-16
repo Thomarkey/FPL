@@ -1,145 +1,135 @@
-<p>PlayerStats</p>
-
-<div class="search-container">
-    <label for="searchInput">Search:</label>
-    <div class="search-input-wrapper">
-        <div class="fa fa-search"></div>
-        <input type="text" id="searchInput" placeholder=" Search by name" [(ngModel)]="searchQuery"
-            (input)="performSearch()" />
-    </div>
-    <button class="clear-button" (click)="clearSearch()">Clear</button>
-</div>
-
-<div class="dropdown-container">
-    <label for="statsDropdown">Filter stats:</label>
-    <div class="dropdown" #statsDropdown>
-        <button class="dropdown-button" (click)="toggleStatsDropdown()">
-            <span>{{ selectedStats.size }} selected</span>
-        </button>
-        <div class="dropdown-content" *ngIf="isStatsDropdownOpen">
-            <div *ngFor="let stat of players[0]?.stats | keyvalue">
-                <label class="checkbox-label">
-                    <input type="checkbox" class="checkbox-input" (change)="toggleStat(castToStatName(stat.key))"
-                        [checked]="selectedStats.has(castToStatName(stat.key))" />
-                    <span class="custom-checkbox"></span>
-                    {{ stat.key | statNameDisplay }}
-                </label>
-            </div>
+<div [class.lower-opacity]="isPlayerDetailPopupOpen">
+    <div class="search-container">
+        <label for="searchInput">Search:</label>
+        <div class="search-input-wrapper">
+            <div class="fa fa-search"></div>
+            <input type="text" id="searchInput" placeholder=" Search by name" [(ngModel)]="searchQuery"
+                (input)="performSearch()" />
         </div>
+        <button class="clear-button" (click)="clearSearch()">Clear</button>
     </div>
-</div>
 
-<div class="dropdown-container">
-    <label for="teamDropdown">Filter teams:</label>
-    <div class="dropdown" #teamDropdown>
-        <button class="dropdown-button" (click)="toggleTeamDropdown()">
-            <span>{{ selectedTeams.size }} selected</span>
-        </button>
-        <div class="dropdown-content" *ngIf="isTeamDropdownOpen">
-            <div *ngFor="let team of Teams">
-                <label class="checkbox-label">
-                    <input type="checkbox" class="checkbox-input" [checked]="selectedTeams.has(team)"
-                        (change)="toggleTeamFilter(team)" [checked]="selectedTeams.has(team)" />
-                    <span class="custom-checkbox"></span>
-                    {{ team | teamDisplay }}
-                </label>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="dropdown-container">
-    <label for="positionDropdown">Filter positions:</label>
-    <div class="dropdown" #positionDropdown>
-        <button class="dropdown-button" (click)="togglePositionDropdown()">
-            <span>{{ selectedPositions.size }} selected</span>
-        </button>
-        <div class="dropdown-content" *ngIf="isPositionDropdownOpen">
-            <div *ngFor="let position of Positions">
-                <label class="checkbox-label">
-                    <input type="checkbox" class="checkbox-input" [checked]="selectedPositions.has(position)"
-                        (change)="togglePositionFilter(position)" [checked]="selectedPositions.has(position)" />
-                    <span class="custom-checkbox"></span>
-                    {{ position | positionDisplay }}
-                </label>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-<div class="player-list-container">
-    <table class="player-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Team</th>
-                <th>Position</th>
-                <ng-container *ngFor=" let stat of players[0]?.stats | keyvalue">
-                    <th class="statColumn" *ngIf="selectedStats.has(castToStatName(stat.key))"
-                        (click)="toggleSort(castToStatName(stat.key))">
+    <div class="dropdown-container">
+        <label for="statsDropdown">Filter stats:</label>
+        <div class="dropdown" #statsDropdown>
+            <button class="dropdown-button" (click)="toggleStatsDropdown()">
+                <span>{{ selectedStats.size }} selected</span>
+            </button>
+            <div class="dropdown-content" *ngIf="isStatsDropdownOpen">
+                <div *ngFor="let stat of players[0]?.stats | keyvalue">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" (change)="toggleStat(castToStatName(stat.key))"
+                            [checked]="selectedStats.has(castToStatName(stat.key))" />
+                        <span class="custom-checkbox"></span>
                         {{ stat.key | statNameDisplay }}
-                        <span class="sort-by" *ngIf="sortBy === stat.key" [class.asc]="sortDirection === 'asc'"
-                            [class.desc]="sortDirection === 'desc'"></span>
-                    </th>
-                </ng-container>
-        </thead>
-        <tbody>
-            <!-- <tr *ngFor="let player of players.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
-                (click)="showPlayerDetails(player)"> -->
-            <tr *ngFor="let player of filteredPlayers.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
-                (click)="showPlayerDetails(player)">
-                <td>{{ player.name }}</td>
-                <td>{{ player.team | teamDisplay}}</td>
-                <td>{{ player.position | positionDisplay }}</td>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- <td *ngFor="let stat of player.stats |  keyvalue "> {{ stat.value }} -->
+    <div class="dropdown-container">
+        <label for="teamDropdown">Filter teams:</label>
+        <div class="dropdown" #teamDropdown>
+            <button class="dropdown-button" (click)="toggleTeamDropdown()">
+                <span>{{ selectedTeams.size }} selected</span>
+            </button>
+            <div class="dropdown-content" *ngIf="isTeamDropdownOpen">
+                <div *ngFor="let team of Teams">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" [checked]="selectedTeams.has(team)"
+                            (change)="toggleTeamFilter(team)" [checked]="selectedTeams.has(team)" />
+                        <span class="custom-checkbox"></span>
+                        {{ team | teamDisplay }}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <ng-container *ngFor="let stat of player.stats | keyvalue">
-                    <td *ngIf="selectedStats.has(castToStatName(stat.key))">{{ stat.value }}</td>
-                </ng-container>
-
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        <button class="previousBtn" (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">&lt;</button>
-        <button (click)="currentPage = 1" [class.active]="currentPage === 1">1</button>
-        <ng-container *ngIf="currentPage > 4">
-            <span class="disabled">...</span>
-        </ng-container>
-        <ng-container *ngFor="let num of getVisiblePageNumbers()">
-            <button (click)="currentPage = num" [class.active]="num === currentPage">{{ num }}</button>
-        </ng-container>
-        <ng-container *ngIf="currentPage < getTotalPages() - 3">
-            <span class="disabled">...</span>
-        </ng-container>
-        <button *ngIf="getTotalPages() !==1" (click)="currentPage = getTotalPages()"
-            [class.active]="currentPage === getTotalPages()">{{
-            getTotalPages()}}</button>
-        <button class="nextBtn" (click)="currentPage = currentPage + 1"
-            [disabled]="currentPage === getTotalPages()">&gt;</button>
+    <div class="dropdown-container">
+        <label for="positionDropdown">Filter positions:</label>
+        <div class="dropdown" #positionDropdown>
+            <button class="dropdown-button" (click)="togglePositionDropdown()">
+                <span>{{ selectedPositions.size }} selected</span>
+            </button>
+            <div class="dropdown-content" *ngIf="isPositionDropdownOpen">
+                <div *ngFor="let position of Positions">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" [checked]="selectedPositions.has(position)"
+                            (change)="togglePositionFilter(position)" [checked]="selectedPositions.has(position)" />
+                        <span class="custom-checkbox"></span>
+                        {{ position | positionDisplay }}
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 
 
 
 
-    <app-player-detail [selectedPlayer]="selectedPlayer" (close)="closePlayerDetail()"></app-player-detail>
+    <div class="player-list-container">
+        <table class="player-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Team</th>
+                    <th>Position</th>
+                    <ng-container *ngFor=" let stat of players[0]?.stats | keyvalue">
+                        <th class="statColumn" *ngIf="selectedStats.has(castToStatName(stat.key))"
+                            (click)="toggleSort(castToStatName(stat.key))">
+                            {{ stat.key | statNameDisplay }}
+                            <span class="sort-by" *ngIf="sortBy === stat.key" [class.asc]="sortDirection === 'asc'"
+                                [class.desc]="sortDirection === 'desc'"></span>
+                        </th>
+                    </ng-container>
+            </thead>
+            <tbody>
+                <!-- <tr *ngFor="let player of players.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
+                (click)="showPlayerDetails(player)"> -->
+                <tr *ngFor="let player of filteredPlayers.slice((currentPage - 1) * playersPerPage, currentPage * playersPerPage)"
+                    (click)="showPlayerDetails(player)">
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.team | teamDisplay}}</td>
+                    <td>{{ player.position | positionDisplay }}</td>
+
+                    <!-- <td *ngFor="let stat of player.stats |  keyvalue "> {{ stat.value }} -->
+
+                    <ng-container *ngFor="let stat of player.stats | keyvalue">
+                        <td *ngIf="selectedStats.has(castToStatName(stat.key))">{{ stat.value }}</td>
+                    </ng-container>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button class="previousBtn" (click)="currentPage = currentPage - 1"
+                [disabled]="currentPage === 1">&lt;</button>
+            <button (click)="currentPage = 1" [class.active]="currentPage === 1">1</button>
+            <ng-container *ngIf="currentPage > 4">
+                <span class="disabled">...</span>
+            </ng-container>
+            <ng-container *ngFor="let num of getVisiblePageNumbers()">
+                <button (click)="currentPage = num" [class.active]="num === currentPage">{{ num }}</button>
+            </ng-container>
+            <ng-container *ngIf="currentPage < getTotalPages() - 3">
+                <span class="disabled">...</span>
+            </ng-container>
+            <button *ngIf="getTotalPages() !==1" (click)="currentPage = getTotalPages()"
+                [class.active]="currentPage === getTotalPages()">{{
+                getTotalPages()}}</button>
+            <button class="nextBtn" (click)="currentPage = currentPage + 1"
+                [disabled]="currentPage === getTotalPages()">&gt;</button>
+        </div>
+
+    </div>
 
 </div>
 
 
-<!-- <div *ngIf="selectedPlayer">
-    <h2>Details for {{ selectedPlayer.name }}</h2>
-    <p>Team: {{ selectedPlayer.team }}</p>
-    <p>Position: {{ selectedPlayer.position }}</p>
-    <p>Stats:</p>
-    <ul>
-        <li *ngFor="let stat of selectedPlayer.stats | keyvalue">
-            {{ stat.key }}: {{ stat.value }}
-        </li>
-    </ul>
-</div> -->
+<div *ngIf="selectedPlayer">
+    <app-player-detail-popup [selectedPlayer]="selectedPlayer"
+        (close)="closePlayerDetailPopup()"></app-player-detail-popup>
+</div>

@@ -91,16 +91,11 @@ export class PlayerListComponent {
 
   toggleTeamDropdown(): void {
     this.isTeamDropdownOpen = !this.isTeamDropdownOpen;
-    // if (this.isTeamDropdownOpen) {
-    //   this.isPositionDropdownOpen = false;
-    // }
+
   }
 
   togglePositionDropdown(): void {
     this.isPositionDropdownOpen = !this.isPositionDropdownOpen;
-    // if (this.isPositionDropdownOpen) {
-    //   this.isTeamDropdownOpen = false;
-    // }
   }
 
 
@@ -112,7 +107,7 @@ export class PlayerListComponent {
     ).filter(player =>
       this.selectedPositions.size === 0 || this.selectedPositions.has(player.position)
     );
-    this.sort(); // Apply sorting if needed
+    this.sort();
   }
 
 
@@ -121,7 +116,7 @@ export class PlayerListComponent {
   searchQuery: string = '';
   filteredPlayers: Player[] = [];
 
-  //TODO: fix this only clearing name search and not other filters as well
+  //TODO: fix this only clearing name search and not other filters as well (position and teams filter resest but still shows in dropdown as activated)
   clearSearch(): void {
     this.searchQuery = '';
     this.performSearch();
@@ -214,10 +209,16 @@ export class PlayerListComponent {
   }
 
 
+  isPlayerDetailPopupOpen: boolean = false;
   //PLAYER DETAILS
   showPlayerDetails(player: Player): void {
-    //TODO
     this.selectedPlayer = player; // Set the selected player
+    this.isPlayerDetailPopupOpen = true;
+  }
+
+  closePlayerDetailPopup(): void {
+    this.selectedPlayer = null;
+    this.isPlayerDetailPopupOpen = false;
   }
 
 

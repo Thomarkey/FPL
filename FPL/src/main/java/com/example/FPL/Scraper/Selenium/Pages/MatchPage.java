@@ -17,7 +17,9 @@ public class MatchPage extends GenericAbstractPage {
     List<WebElement> substitutePlayers;
 
 
-    public Map<String, Map<String, String>> scrapeStats() {
+    public Map<String, Map<String, String>> scrapeStats() throws InterruptedException {
+        //TODO REWORK TO REMOVE SLEEP
+        Thread.sleep(1000);
         Map<String, Map<String, String>> playerStatsHashMap = new HashMap<>();
         for (int i = 0; i < startingPlayers.size(); i++) {
             WebElement player = startingPlayers.get(i);

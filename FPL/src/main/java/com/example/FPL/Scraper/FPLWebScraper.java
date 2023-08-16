@@ -7,10 +7,16 @@ import com.example.FPL.Scraper.Selenium.Driver.WebDriverProvider;
 import com.example.FPL.Scraper.Selenium.Pages.CookiesPopupPage;
 import com.example.FPL.Scraper.Selenium.Pages.MatchPage;
 import com.example.FPL.Service.PlayerService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+
+import static com.example.FPL.Scraper.ScraperHelper.*;
 
 
 @Component
@@ -23,58 +29,84 @@ public class FPLWebScraper {
         this.playerService = playerService;
     }
 
-    public void scrapeAndUpdateStats() {
+    public void setUpWebDriver(boolean isHeadless) {
         //TODO: when headless set locale to BE-NL
-        WebDriverProvider.setUpDriver(false);
-        //https://fantasy.proleague.be/match/41861 FIRST MATCH
-        WebDriverProvider.goToURL("https://fantasy.proleague.be/match/41861");
+        WebDriverProvider.setUpDriver(isHeadless);
+    }
+
+    public void quitDriver() {
+        WebDriverProvider.quitDriver();
+    }
+
+    public void scrapeAndUpdateStats() throws InterruptedException {
+        WebDriverProvider.goToURL("https://fantasy.proleague.be");
         new CookiesPopupPage().rejectCookies();
 
-        Map<String, Map<String, String>> map = getUpdatedStats();
+        List<String> matchList = new ScraperHelper().readMatchLinksFromFile("/spelers_JPL_2024_updated");
 
-        WebDriverProvider.quitDriver();
+        Map<String, Map<String, String>> playerStatsMap = new HashMap<>();
 
-        updateDataBaseWithData(map);
+        for (String match : matchList) {
+            WebDriverProvider.goToURL(match);
+            Map<String, Map<String, String>> updatedStatsMap = new MatchPage().scrapeStats();
+            mergeStats(playerStatsMap, updatedStatsMap);
+        }
 
+        updateDataBaseWithData(playerStatsMap);
     }
 
-    public Map<String, Map<String, String>> getUpdatedStats(){
-       return new MatchPage().scrapeStats();
-    }
+    private void mergeStats(Map<String, Map<String, String>> targetMap, Map<String, Map<String, String>> sourceMap) {
+        for (Map.Entry<String, Map<String, String>> entry : sourceMap.entrySet()) {
+            String uniquePlayerWithTeamName = entry.getKey();
+            Map<String, String> sourceStats = entry.getValue();
 
-    public void updateDataBaseWithData(Map<String, Map<String, String>> scrapedData){
-            for (Map.Entry<String, Map<String, String>> entry : scrapedData.entrySet()) {
-                String playerName = entry.getKey();
-                Map<String, String> statMap = entry.getValue();
-                Team teamName = Team.fromAbbreviation(statMap.get("TEAM"));
+            Map<String, String> targetStats = targetMap.computeIfAbsent(uniquePlayerWithTeamName, k -> new HashMap<>());
 
-                // Fetch the player by playerName and TEAM.Name (team because some people have same name)
-                Player player = playerService.getPlayerByNameAndTeam(playerName, teamName);
+            for (Map.Entry<String, String> statEntry : sourceStats.entrySet()) {
+                String statKey = statEntry.getKey();
+                String newStatValue = statEntry.getValue();
+                String existingStatValue = targetStats.get(statKey);
 
-                statMap.remove("TEAM"); // Remove the "team" entry from the map (not needed anymore, rest are INTS stats values)
-
-                if (player != null) {
-                    for (Map.Entry<String, String> statEntry : statMap.entrySet()) {
-                        String statName = statEntry.getKey();
-                        int statValue = Integer.parseInt(statEntry.getValue());
-
-                        // Check if the stat name exists in your StatName enum
-                        try {
-                            StatName enumStatName = StatName.findByNameOrAlt(statName.toUpperCase().replace(" ", "_"));
-                            player.getStats().put(enumStatName, player.getStats().get(enumStatName) + statValue);
-                        } catch (IllegalArgumentException e) {
-                            System.out.println(statName + " not found in stats!!");
-                            // Handle if the stat name is not found in the enum
-                        }
-                    }
-
-                    playerService.savePlayer(player);
-                } else {
-                    System.out.println(playerName + " not found in players!!");
-                    // Handle if the player is not found in the database
-                }
+                int sum = (existingStatValue != null && !existingStatValue.isEmpty()) ? Integer.parseInt(existingStatValue) : 0;
+                sum += Integer.parseInt(newStatValue);
+                targetStats.put(statKey, String.valueOf(sum));
             }
+        }
+    }
 
-}
+    public void updateDataBaseWithData(Map<String, Map<String, String>> scrapedData) {
+        for (Map.Entry<String, Map<String, String>> entry : scrapedData.entrySet()) {
+            String uniquePlayerWithTeamName = entry.getKey();
+            Map<String, String> statMap = entry.getValue();
 
+            String playerName = getExtractedPlayerName(uniquePlayerWithTeamName);
+            Team teamName = getExtractedTeamName(uniquePlayerWithTeamName);
+
+            // Fetch the player by playerName and TEAM.Name (team because some players have same name)
+            Player player = playerService.getPlayerByNameAndTeam(playerName, teamName);
+
+
+            if (player != null) {
+                for (Map.Entry<String, String> statEntry : statMap.entrySet()) {
+                    String statName = statEntry.getKey();
+                    int statValue = Integer.parseInt(statEntry.getValue());
+
+                    // Check if the stat name exists in your StatName enum
+                    try {
+                        StatName enumStatName = StatName.findByNameOrAlt(statName.toUpperCase().replace(" ", "_"));
+                        player.getStats().put(enumStatName, player.getStats().get(enumStatName) + statValue);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(statName + " not found in stats!!");
+                        // Handle if the stat name is not found in the enum
+                    }
+                }
+
+                playerService.savePlayer(player);
+            } else {
+                System.out.println(playerName + "with club " + teamName + " not found in players!!");
+                // Handle if the player is not found in the database
+            }
+        }
+
+    }
 }

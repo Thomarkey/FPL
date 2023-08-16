@@ -1,22 +1,22 @@
 package com.example.FPL.Model;
 
 public enum Team {
-    AA_GENT,
-    CERCLE_BRUGGE,
-    CLUB_BRUGGE,
-    KAS_EUPEN,
-    KRC_GENK,
-    KV_KORTRIJK,
-    KV_MECHELEN,
-    KVC_WESTERLO,
-    OH_LEUVEN,
-    ROYAL_ANTWERP_FC,
+    AA_GENT("GNT", "Gent"),
+    CERCLE_BRUGGE("CER", "Cercle Brugge"),
+    CLUB_BRUGGE("CLU", "Club Brugge"),
+    KAS_EUPEN("EUP", "Eupen"),
+    KRC_GENK("GNK", "Genk"),
+    KV_KORTRIJK("KOR", "Kortrijk"),
+    KV_MECHELEN("KVM", "Mechel;en"),
+    KVC_WESTERLO("WES", "Westerlo"),
+    OH_LEUVEN("OHL", "Leuven"),
+    ROYAL_ANTWERP_FC("ANT", "Antwerp"),
     ROYALE_UNION_SAINT_GILLOISE("USG", "Royale Union Saint-Gilloise"),
     RSC_ANDERLECHT("AND", "Anderlecht"),
-    RWDM,
-    SPORTING_CHARLEROI,
+    RWDM("RWD", "RWDM"),
+    SPORTING_CHARLEROI("CHA", "Charleroi"),
     STANDARD_DE_LIEGE("STA", "Standard de Liège"),
-    STVV;
+    STVV("STV", "Sint-Truiden");
 
     private final String alternativeName;
     private final String abbreviation;

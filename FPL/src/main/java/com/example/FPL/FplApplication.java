@@ -54,20 +54,24 @@ public class FplApplication {
 //			context.close();
 //		}
 
-	    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext context = SpringApplication.run(FplApplication.class, args);
         PlayerService playerService = context.getBean(PlayerService.class);
 
         // Load players from Excel file
-		List<Player> players = ExcelDataLoader.loadPlayers("FPL/src/main/resources/spelers_JPL_2024_updated.xlsx");
+        List<Player> players = ExcelDataLoader.loadPlayers("FPL/src/main/resources/spelers_JPL_2024.xlsx");
 
         // Save players to the db
         playerService.savePlayers(players);
 
         // Scrape players data from FPL website
-		FPLWebScraper webScraper = new FPLWebScraper(playerService);
+        FPLWebScraper webScraper = new FPLWebScraper(playerService);
+        //setup selenium webDriver
+        webScraper.setUpWebDriver(false);
         // Update players' stats in db
-		webScraper.scrapeAndUpdateStats();
+        webScraper.scrapeAndUpdateStats();
+        // Shut down selenium webDriver
+        webScraper.quitDriver();
 
 //        context.close();
     }

@@ -12,18 +12,55 @@
 
 <div class="dropdown-container">
     <label for="statsDropdown">Filter stats:</label>
-    <div class="dropdown" #dropdown>
-        <button class="dropdown-button" (click)="toggleDropdown()">
+    <div class="dropdown" #statsDropdown>
+        <button class="dropdown-button" (click)="toggleStatsDropdown()">
             <span>{{ selectedStats.size }} selected</span>
         </button>
-        <div class="dropdown-content" *ngIf="isDropdownOpen">
+        <div class="dropdown-content" *ngIf="isStatsDropdownOpen">
             <div *ngFor="let stat of players[0]?.stats | keyvalue">
                 <label class="checkbox-label">
-                    <input type="checkbox" class="checkbox-input"
-                        [checked]="selectedStats.has(castToStatName(stat.key))"
-                        (change)="toggleStat(castToStatName(stat.key))" />
+                    <input type="checkbox" class="checkbox-input" (change)="toggleStat(castToStatName(stat.key))"
+                        [checked]="selectedStats.has(castToStatName(stat.key))" />
                     <span class="custom-checkbox"></span>
                     {{ stat.key | statNameDisplay }}
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dropdown-container">
+    <label for="teamDropdown">Filter teams:</label>
+    <div class="dropdown" #teamDropdown>
+        <button class="dropdown-button" (click)="toggleTeamDropdown()">
+            <span>{{ selectedTeams.size }} selected</span>
+        </button>
+        <div class="dropdown-content" *ngIf="isTeamDropdownOpen">
+            <div *ngFor="let team of Teams">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="checkbox-input" [checked]="selectedTeams.has(team)"
+                        (change)="toggleTeamFilter(team)" [checked]="selectedTeams.has(team)" />
+                    <span class="custom-checkbox"></span>
+                    {{ team | teamDisplay }}
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dropdown-container">
+    <label for="positionDropdown">Filter positions:</label>
+    <div class="dropdown" #positionDropdown>
+        <button class="dropdown-button" (click)="togglePositionDropdown()">
+            <span>{{ selectedPositions.size }} selected</span>
+        </button>
+        <div class="dropdown-content" *ngIf="isPositionDropdownOpen">
+            <div *ngFor="let position of Positions">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="checkbox-input" [checked]="selectedPositions.has(position)"
+                        (change)="togglePositionFilter(position)" [checked]="selectedPositions.has(position)" />
+                    <span class="custom-checkbox"></span>
+                    {{ position | positionDisplay }}
                 </label>
             </div>
         </div>
@@ -90,6 +127,7 @@
 
 
 
+    <app-player-detail [selectedPlayer]="selectedPlayer" (close)="closePlayerDetail()"></app-player-detail>
 
 </div>
 

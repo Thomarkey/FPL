@@ -2,6 +2,8 @@ import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Player } from 'src/app/models/player.model';
 import { PlayerService } from 'src/app/services/player.service';
 import { StatName } from 'src/app/models/statName.enum';
+import { Team } from 'src/app/models/team.enum';
+import { Position } from 'src/app/models/position.enum';
 
 
 @Component({
@@ -56,10 +58,70 @@ export class PlayerListComponent {
     return key as StatName;
   }
 
+  //FILTER TEAM AND POSITION
+
+  Positions: Position[] = Object.values(Position); // Initialize the Positions array with enum values
+  Teams: Team[] = Object.values(Team); // Initialize the Teams array with enum values
+
+  selectedTeams: Set<Team> = new Set();
+  selectedPositions: Set<Position> = new Set();
+
+
+  isTeamDropdownOpen: boolean = false;
+  isPositionDropdownOpen: boolean = false;
+
+
+  toggleTeamFilter(team: Team): void {
+    if (this.selectedTeams.has(team)) {
+      this.selectedTeams.delete(team);
+    } else {
+      this.selectedTeams.add(team);
+    }
+    this.filterPlayers();
+  }
+
+  togglePositionFilter(position: Position): void {
+    if (this.selectedPositions.has(position)) {
+      this.selectedPositions.delete(position);
+    } else {
+      this.selectedPositions.add(position);
+    }
+    this.filterPlayers();
+  }
+
+  toggleTeamDropdown(): void {
+    this.isTeamDropdownOpen = !this.isTeamDropdownOpen;
+    // if (this.isTeamDropdownOpen) {
+    //   this.isPositionDropdownOpen = false;
+    // }
+  }
+
+  togglePositionDropdown(): void {
+    this.isPositionDropdownOpen = !this.isPositionDropdownOpen;
+    // if (this.isPositionDropdownOpen) {
+    //   this.isTeamDropdownOpen = false;
+    // }
+  }
+
+
+
+  filterPlayers(): void {
+    this.currentPage = 1;
+    this.filteredPlayers = this.players.filter(player =>
+      this.selectedTeams.size === 0 || this.selectedTeams.has(player.team)
+    ).filter(player =>
+      this.selectedPositions.size === 0 || this.selectedPositions.has(player.position)
+    );
+    this.sort(); // Apply sorting if needed
+  }
+
+
+
   //SEARCH FCTION
   searchQuery: string = '';
   filteredPlayers: Player[] = [];
 
+  //TODO: fix this only clearing name search and not other filters as well
   clearSearch(): void {
     this.searchQuery = '';
     this.performSearch();
@@ -74,22 +136,37 @@ export class PlayerListComponent {
   }
 
   //FILTER DROPDOWN
-  isDropdownOpen: boolean = false;
-  @ViewChild('dropdown', { read: ElementRef }) dropdownRef!: ElementRef;
+  isStatsDropdownOpen: boolean = false;
+  @ViewChild('statsDropdown', { read: ElementRef }) statsDropdownRef!: ElementRef;
+  @ViewChild('teamDropdown', { read: ElementRef }) teamDropdownRef!: ElementRef;
+  @ViewChild('positionDropdown', { read: ElementRef }) positionDropdownRef!: ElementRef;
 
-  toggleDropdown(): void {
-    this.isDropdownOpen = !this.isDropdownOpen;
+  toggleStatsDropdown(): void {
+    this.isStatsDropdownOpen = !this.isStatsDropdownOpen;
   }
 
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
-    if (this.isDropdownOpen) {
-      const isClickedInside = this.dropdownRef.nativeElement.contains(event.target);
-      if (!isClickedInside) {
-        this.isDropdownOpen = false;
-      }
+    if (
+      this.isStatsDropdownOpen &&
+      !this.statsDropdownRef.nativeElement.contains(event.target)
+    ) {
+      this.isStatsDropdownOpen = false;
+    }
+    if (
+      this.isTeamDropdownOpen &&
+      !this.teamDropdownRef.nativeElement.contains(event.target)
+    ) {
+      this.isTeamDropdownOpen = false;
+    }
+    if (
+      this.isPositionDropdownOpen &&
+      !this.positionDropdownRef.nativeElement.contains(event.target)
+    ) {
+      this.isPositionDropdownOpen = false;
     }
   }
+
 
 
   toggleStat(stat: StatName): void {

@@ -29,26 +29,72 @@ export class PlayerListComponent {
     });
   };
 
-  //SORTING OF STAT COLUMNS
-  sortDirection: 'asc' | 'desc' = 'asc';
-  sortBy: StatName | null = null;
 
-  toggleSort(stat: StatName): void {
-    if (this.sortBy === stat) {
+  //SORTING OF COLUMNS
+  sortDirection: 'asc' | 'desc' = 'asc';
+  sortStatBy: StatName | null = null;
+  sortColumnBy: string | 'points' | null = null;
+
+  toggleStatSort(stat: StatName): void {
+    if (this.sortStatBy === stat) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      this.sortBy = stat;
+      this.sortStatBy = stat;
       this.sortDirection = 'desc';
+
+      this.sortColumnBy = null;
+
     }
-    this.sort();
+    this.statSort();
   }
 
-  //TODO: check sort while searching for player (sort not updated/following on the fly)
-  sort(): void {
-    if (this.sortBy) {
+  toggleColumnSort(column: string): void {
+    if (this.sortColumnBy === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumnBy = column;
+      this.sortDirection = 'desc';
+
+      this.sortStatBy = null;
+    }
+    this.columnSort();
+  }
+
+  columnSort(): void {
+    if (this.sortColumnBy === 'points') {
       this.filteredPlayers.sort((a, b) => {
-        const aValue = a.stats[this.sortBy!] || 0;
-        const bValue = b.stats[this.sortBy!] || 0;
+        const aValue = a.totalPoints;
+        const bValue = b.totalPoints;
+        return this.sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+      });
+    }
+    else if (this.sortColumnBy === 'name') {
+      this.filteredPlayers.sort((a, b) => {
+        const aValue = a.name.toLowerCase();
+        const bValue = b.name.toLowerCase();
+        return this.sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      });
+    } else if (this.sortColumnBy === 'team') {
+      this.filteredPlayers.sort((a, b) => {
+        const aValue = a.team.toLowerCase();
+        const bValue = b.team.toLowerCase();
+        return this.sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      });
+    } else if (this.sortColumnBy === 'position') {
+      this.filteredPlayers.sort((a, b) => {
+        const aValue = a.position.toLowerCase();
+        const bValue = b.position.toLowerCase();
+        return this.sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      });
+    }
+  }
+
+
+  statSort(): void {
+    if (this.sortStatBy) {
+      this.filteredPlayers.sort((a, b) => {
+        const aValue = a.stats[this.sortStatBy!] || 0;
+        const bValue = b.stats[this.sortStatBy!] || 0;
         return this.sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
       });
     }
@@ -99,17 +145,33 @@ export class PlayerListComponent {
   }
 
 
-
   filterPlayers(): void {
     this.currentPage = 1;
+
+    // Store current sorting state
+    const prevSortStatBy = this.sortStatBy;
+    const prevSortColumnBy = this.sortColumnBy;
+    const prevSortDirection = this.sortDirection;
+
     this.filteredPlayers = this.players.filter(player =>
       this.selectedTeams.size === 0 || this.selectedTeams.has(player.team)
     ).filter(player =>
       this.selectedPositions.size === 0 || this.selectedPositions.has(player.position)
     );
-    this.sort();
-  }
 
+    // Reapply sorting
+    this.sortStatBy = prevSortStatBy;
+    this.sortColumnBy = prevSortColumnBy;
+    this.sortDirection = prevSortDirection;
+
+    // Apply sorting function based on sorting type
+    if (this.sortStatBy) {
+      this.statSort();
+    } else if (this.sortColumnBy) {
+      this.columnSort();
+    }
+
+  }
 
 
   //SEARCH FCTION
@@ -124,10 +186,28 @@ export class PlayerListComponent {
 
   performSearch(): void {
     this.currentPage = 1;
+
+    // Store current sorting state
+    const prevSortStatBy = this.sortStatBy;
+    const prevSortColumnBy = this.sortColumnBy;
+    const prevSortDirection = this.sortDirection;
+
     const lowerCaseQuery = this.searchQuery.toLowerCase();
     this.filteredPlayers = this.players.filter(player =>
       player.name.toLowerCase().includes(lowerCaseQuery)
     );
+
+    // Reapply sorting
+    this.sortStatBy = prevSortStatBy;
+    this.sortColumnBy = prevSortColumnBy;
+    this.sortDirection = prevSortDirection;
+
+    // Apply sorting function based on sorting type
+    if (this.sortStatBy) {
+      this.statSort();
+    } else if (this.sortColumnBy) {
+      this.columnSort();
+    }
   }
 
   //FILTER DROPDOWN

@@ -66,22 +66,31 @@
         </div>
     </div>
 
-
-
-
     <div class="player-list-container">
         <table class="player-table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Team</th>
-                    <th>Position</th>
-                    <th>Points</th>
+                    <th (click)="toggleColumnSort('name')">Name
+                        <span class="sort-by" *ngIf="sortColumnBy === 'name'" [class.asc]="sortDirection === 'asc'"
+                            [class.desc]="sortDirection === 'desc'"></span>
+                    </th>
+                    <th (click)="toggleColumnSort('team')">Team
+                        <span class="sort-by" *ngIf="sortColumnBy === 'team'" [class.asc]="sortDirection === 'asc'"
+                            [class.desc]="sortDirection === 'desc'"></span>
+                    </th>
+                    <th (click)="toggleColumnSort('position')">Position
+                        <span class="sort-by" *ngIf="sortColumnBy === 'position'" [class.asc]="sortDirection === 'asc'"
+                            [class.desc]="sortDirection === 'desc'"></span>
+                    </th>
+                    <th (click)="toggleColumnSort('points')">Points
+                        <span class="sort-by" *ngIf="sortColumnBy === 'points'" [class.asc]="sortDirection === 'asc'"
+                            [class.desc]="sortDirection === 'desc'"></span>
+                    </th>
                     <ng-container *ngFor=" let stat of players[0]?.stats | keyvalue">
                         <th class="statColumn" *ngIf="selectedStats.has(castToStatName(stat.key))"
-                            (click)="toggleSort(castToStatName(stat.key))">
+                            (click)="toggleStatSort(castToStatName(stat.key))">
                             {{ stat.key | statNameDisplay }}
-                            <span class="sort-by" *ngIf="sortBy === stat.key" [class.asc]="sortDirection === 'asc'"
+                            <span class="sort-by" *ngIf="sortStatBy === stat.key" [class.asc]="sortDirection === 'asc'"
                                 [class.desc]="sortDirection === 'desc'"></span>
                         </th>
                     </ng-container>

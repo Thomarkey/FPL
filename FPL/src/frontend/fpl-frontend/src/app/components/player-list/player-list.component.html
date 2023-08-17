@@ -13,7 +13,7 @@
         <label for="statsDropdown">Filter stats:</label>
         <div class="dropdown" #statsDropdown>
             <button class="dropdown-button" (click)="toggleStatsDropdown()">
-                <span>{{ selectedStats.size }} selected</span>
+                <span>{{ getSelected('stats') }} selected</span>
             </button>
             <div class="dropdown-content" *ngIf="isStatsDropdownOpen">
                 <div *ngFor="let stat of players[0]?.stats | keyvalue">
@@ -32,13 +32,13 @@
         <label for="teamDropdown">Filter teams:</label>
         <div class="dropdown" #teamDropdown>
             <button class="dropdown-button" (click)="toggleTeamDropdown()">
-                <span>{{ selectedTeams.size }} selected</span>
+                <span>{{ getSelected('teams') }} selected</span>
             </button>
             <div class="dropdown-content" *ngIf="isTeamDropdownOpen">
                 <div *ngFor="let team of Teams">
                     <label class="checkbox-label">
-                        <input type="checkbox" class="checkbox-input" [checked]="selectedTeams.has(team)"
-                            (change)="toggleTeamFilter(team)" [checked]="selectedTeams.has(team)" />
+                        <input type="checkbox" class="checkbox-input" (change)="toggleTeamFilter(team)"
+                            [checked]="selectedTeams.has(team)" />
                         <span class="custom-checkbox"></span>
                         {{ team | teamDisplay }}
                     </label>
@@ -51,13 +51,13 @@
         <label for="positionDropdown">Filter positions:</label>
         <div class="dropdown" #positionDropdown>
             <button class="dropdown-button" (click)="togglePositionDropdown()">
-                <span>{{ selectedPositions.size }} selected</span>
+                <span>{{ getSelected('positions') }} selected</span>
             </button>
             <div class="dropdown-content" *ngIf="isPositionDropdownOpen">
                 <div *ngFor="let position of Positions">
                     <label class="checkbox-label">
-                        <input type="checkbox" class="checkbox-input" [checked]="selectedPositions.has(position)"
-                            (change)="togglePositionFilter(position)" [checked]="selectedPositions.has(position)" />
+                        <input type="checkbox" class="checkbox-input" (change)="togglePositionFilter(position)"
+                            [checked]="selectedPositions.has(position)" />
                         <span class="custom-checkbox"></span>
                         {{ position | positionDisplay }}
                     </label>

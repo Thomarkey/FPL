@@ -17,6 +17,8 @@ export class PlayerListComponent {
   selectedPlayer: Player | null = null;
   selectedStats: Set<StatName> = new Set(); // Initialize selectedStats Set
   preSelectedStats: StatName[] = [StatName.GAME_STARTED]; // Add more if needed
+  StatNames: StatName[] = Object.values(StatName);
+
 
   constructor(private playerService: PlayerService) { }
 
@@ -109,8 +111,8 @@ export class PlayerListComponent {
   Positions: Position[] = Object.values(Position); // Initialize the Positions array with enum values
   Teams: Team[] = Object.values(Team); // Initialize the Teams array with enum values
 
-  selectedTeams: Set<Team> = new Set();
-  selectedPositions: Set<Position> = new Set();
+  selectedTeams: Set<Team> = new Set(this.Teams);
+  selectedPositions: Set<Position> = new Set(this.Positions);
 
 
   isTeamDropdownOpen: boolean = false;
@@ -153,10 +155,12 @@ export class PlayerListComponent {
     const prevSortColumnBy = this.sortColumnBy;
     const prevSortDirection = this.sortDirection;
 
+    const lowerCaseQuery = this.searchQuery.toLowerCase();
+
     this.filteredPlayers = this.players.filter(player =>
-      this.selectedTeams.size === 0 || this.selectedTeams.has(player.team)
-    ).filter(player =>
-      this.selectedPositions.size === 0 || this.selectedPositions.has(player.position)
+      player.name.toLowerCase().includes(lowerCaseQuery) &&
+      (this.selectedTeams.size === 0 || this.selectedTeams.has(player.team)) &&
+      (this.selectedPositions.size === 0 || this.selectedPositions.has(player.position))
     );
 
     // Reapply sorting
@@ -173,15 +177,31 @@ export class PlayerListComponent {
 
   }
 
+  getSelected(key: string): string {
+    const numSelected = key === 'positions' ? this.selectedPositions.size :
+      key === 'teams' ? this.selectedTeams.size :
+        key === 'stats' ? this.selectedStats.size : 0;
+
+    const totalItems = key === 'positions' ? this.Positions.length :
+      key === 'teams' ? this.Teams.length :
+        key === 'stats' ? this.StatNames.length : 0;
+
+    if (numSelected === 0) {
+      return 'none';
+    } else if (numSelected === totalItems) {
+      return 'all';
+    } else {
+      return numSelected.toString();
+    }
+  }
 
   //SEARCH FCTION
   searchQuery: string = '';
   filteredPlayers: Player[] = [];
 
-  //TODO: fix this only clearing name search and not other filters as well (position and teams filter resest but still shows in dropdown as activated)
   clearSearch(): void {
     this.searchQuery = '';
-    this.performSearch();
+    this.filterPlayers();
   }
 
   performSearch(): void {
@@ -194,7 +214,9 @@ export class PlayerListComponent {
 
     const lowerCaseQuery = this.searchQuery.toLowerCase();
     this.filteredPlayers = this.players.filter(player =>
-      player.name.toLowerCase().includes(lowerCaseQuery)
+      player.name.toLowerCase().includes(lowerCaseQuery) &&
+      (this.selectedTeams.size === 0 || this.selectedTeams.has(player.team)) &&
+      (this.selectedPositions.size === 0 || this.selectedPositions.has(player.position))
     );
 
     // Reapply sorting
@@ -241,7 +263,6 @@ export class PlayerListComponent {
       this.isPositionDropdownOpen = false;
     }
   }
-
 
 
   toggleStat(stat: StatName): void {

@@ -42,7 +42,7 @@ public class FPLWebScraper {
         WebDriverProvider.goToURL("https://fantasy.proleague.be");
         new CookiesPopupPage().rejectCookies();
 
-        List<String> matchList = new ScraperHelper().readMatchLinksFromFile("/spelers_JPL_2024_updated");
+        List<String> matchList = new ScraperHelper().readMatchLinksFromFile("/spelers_JPL_2024_updated.xlsx");
 
         Map<String, Map<String, String>> playerStatsMap = new HashMap<>();
 
@@ -101,9 +101,18 @@ public class FPLWebScraper {
                     }
                 }
 
+                int totalPoints = player.getStats().entrySet().stream()
+                        .filter(stat -> stat.getKey() != StatName.GAME_STARTED)
+                        .mapToInt(Map.Entry::getValue)
+                        .sum();
+
+                //TODO CHECK IF YOU ARE UPDATING OR OVERWRITING
+//                player.setTotalPoints(totalPoints);
+                player.setTotalPoints(player.getTotalPoints() + totalPoints);
+
                 playerService.savePlayer(player);
             } else {
-                System.out.println(playerName + "with club " + teamName + " not found in players!!");
+                System.out.println(playerName + " with club " + teamName + " not found in players!!");
                 // Handle if the player is not found in the database
             }
         }

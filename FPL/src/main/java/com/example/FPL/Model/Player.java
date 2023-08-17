@@ -15,11 +15,11 @@ public class Player {
 
     private String name;
     @Enumerated(EnumType.STRING)
-
     private Team team;
     @Enumerated(EnumType.STRING)
-
     private Position position;
+
+    private Integer totalPoints;
 
     @ElementCollection(fetch = FetchType.EAGER) //fetch the stats collection eagerly instead of lazily to handle LazyInitializationException.
     @CollectionTable(name = "player_stats", joinColumns = @JoinColumn(name = "player_id"))
@@ -33,6 +33,16 @@ public class Player {
 
     public Player(String name, Team team, Position position) {
         this.name = name;
+        this.team = team;
+        this.position = position;
+        this.totalPoints = 0;
+        this.stats = initStats();
+    }
+
+
+    public Player(String name, Integer totalPoints, Team team, Position position) {
+        this.name = name;
+        this.totalPoints = totalPoints;
         this.team = team;
         this.position = position;
         this.stats = initStats();
@@ -55,6 +65,14 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getTotalPoints() {
+        return totalPoints;
+    }
+
+    public void setTotalPoints(Integer totalPoints) {
+        this.totalPoints = totalPoints;
     }
 
     public Team getTeam() {

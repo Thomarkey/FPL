@@ -76,6 +76,7 @@
                     <th>Name</th>
                     <th>Team</th>
                     <th>Position</th>
+                    <th>Points</th>
                     <ng-container *ngFor=" let stat of players[0]?.stats | keyvalue">
                         <th class="statColumn" *ngIf="selectedStats.has(castToStatName(stat.key))"
                             (click)="toggleSort(castToStatName(stat.key))">
@@ -93,6 +94,7 @@
                     <td>{{ player.name }}</td>
                     <td>{{ player.team | teamDisplay}}</td>
                     <td>{{ player.position | positionDisplay }}</td>
+                    <td>{{ player.totalPoints }}</td>
 
                     <!-- <td *ngFor="let stat of player.stats |  keyvalue "> {{ stat.value }} -->
 

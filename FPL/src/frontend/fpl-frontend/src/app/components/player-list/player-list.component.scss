@@ -32,13 +32,13 @@ th.statColumn {
 
 /* Apply styles to the ascending sort icon */
 .sort-by.asc::before {
-  content: '\2191';
+  content: ' \2191';
   font-weight: bolder;
 }
 
 /* Apply styles to the descending sort icon */
 .sort-by.desc::before {
-  content: '\2193';
+  content: ' \2193';
   font-weight: bolder;
 }
 
@@ -111,6 +111,7 @@ label {
 .checkbox-label {
   display: block;
   margin-bottom: 5px;
+  font-weight: normal;
 }
 
 .checkbox-label:hover {

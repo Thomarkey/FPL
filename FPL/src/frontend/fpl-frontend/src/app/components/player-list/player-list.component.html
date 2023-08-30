@@ -89,7 +89,8 @@
                     <ng-container *ngFor=" let stat of players[0]?.stats | keyvalue">
                         <th class="statColumn" *ngIf="selectedStats.has(castToStatName(stat.key))"
                             (click)="toggleStatSort(castToStatName(stat.key))">
-                            {{ stat.key | statNameDisplay }}
+                            <span title="{{ stat.key | statNameDisplay: 'full' }}">{{ stat.key |
+                                statNameDisplay:'abbrev' }}</span>
                             <span class="sort-by" *ngIf="sortStatBy === stat.key" [class.asc]="sortDirection === 'asc'"
                                 [class.desc]="sortDirection === 'desc'"></span>
                         </th>

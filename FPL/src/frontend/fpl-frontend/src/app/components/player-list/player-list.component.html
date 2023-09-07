@@ -13,7 +13,7 @@
         <label for="statsDropdown">Filter stats:</label>
         <div class="dropdown" #statsDropdown>
             <button class="dropdown-button" (click)="toggleStatsDropdown()">
-                <span>{{ getSelected('stats') }} selected</span>
+                <span>({{ getSelected('stats') }})</span>
             </button>
             <div class="dropdown-content" *ngIf="isStatsDropdownOpen">
                 <div *ngFor="let stat of players[0]?.stats | keyvalue">
@@ -32,7 +32,7 @@
         <label for="teamDropdown">Filter teams:</label>
         <div class="dropdown" #teamDropdown>
             <button class="dropdown-button" (click)="toggleTeamDropdown()">
-                <span>{{ getSelected('teams') }} selected</span>
+                <span>({{ getSelected('teams') }})</span>
             </button>
             <div class="dropdown-content" *ngIf="isTeamDropdownOpen">
                 <div *ngFor="let team of Teams">
@@ -51,7 +51,7 @@
         <label for="positionDropdown">Filter positions:</label>
         <div class="dropdown" #positionDropdown>
             <button class="dropdown-button" (click)="togglePositionDropdown()">
-                <span>{{ getSelected('positions') }} selected</span>
+                <span>({{ getSelected('positions') }})</span>
             </button>
             <div class="dropdown-content" *ngIf="isPositionDropdownOpen">
                 <div *ngFor="let position of Positions">

@@ -30,9 +30,9 @@ public class PlayerController {
         return playerRepository.findAll();
     }
 
-    @GetMapping("/helloWorld")
-    public String helloWorld(){
-        System.out.println("helloWorld(): " + LocalDateTime.now());
-        return "hello World!";
-    }
+    // @GetMapping("/helloWorld")
+    // public String helloWorld(){
+    //     System.out.println("helloWorld(): " + LocalDateTime.now());
+    //     return "hello World!";
+    // }
 }

@@ -42,7 +42,7 @@ public class FPLWebScraper {
         WebDriverProvider.goToURL("https://fantasy.proleague.be");
         new CookiesPopupPage().rejectCookies();
 
-        List<String> matchList = new ScraperHelper().readMatchLinksFromFile("/spelers_JPL_2024_updated.xlsx");
+        List<String> matchList = new ScraperHelper().readMatchLinksFromFile("/union.txt");
 
         Map<String, Map<String, String>> playerStatsMap = new HashMap<>();
 

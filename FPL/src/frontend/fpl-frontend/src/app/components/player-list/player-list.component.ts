@@ -195,6 +195,38 @@ export class PlayerListComponent {
     }
   }
 
+  //(de)select label in dropdowns
+  selectAllItems(key: string) {
+    let items: Set<string>;
+    let allItems: string[];
+
+    if (key === 'positions') {
+      items = this.selectedPositions;
+      allItems = this.Positions;
+    } else if (key === 'teams') {
+      items = this.selectedTeams;
+      allItems = this.Teams;
+    } else if (key === 'stats') {
+      items = this.selectedStats;
+      allItems = Object.keys(this.players[0]?.stats || {});
+    } else {
+      return; // Invalid key, do nothing
+    }
+
+    if (this.getSelected(key) === 'all') {
+      // If all items are selected, deselect all
+      allItems.forEach(item => {
+        items.delete(item);
+      });
+    } else {
+      // Otherwise, select all items
+      allItems.forEach(item => {
+        items.add(item);
+      });
+    }
+    this.filterPlayers();
+  }
+
   //SEARCH FCTION
   searchQuery: string = '';
   filteredPlayers: Player[] = [];

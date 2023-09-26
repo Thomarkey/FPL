@@ -16,6 +16,7 @@
                 <span>({{ getSelected('stats') }})</span>
             </button>
             <div class="dropdown-content" *ngIf="isStatsDropdownOpen">
+                <span (click)="selectAllItems('stats')" class="select-all-label">(de)select all</span>
                 <div *ngFor="let stat of players[0]?.stats | keyvalue">
                     <label class="checkbox-label">
                         <input type="checkbox" class="checkbox-input" (change)="toggleStat(castToStatName(stat.key))"
@@ -35,6 +36,7 @@
                 <span>({{ getSelected('teams') }})</span>
             </button>
             <div class="dropdown-content" *ngIf="isTeamDropdownOpen">
+                <span (click)="selectAllItems('teams')" class="select-all-label">(de)select all</span>
                 <div *ngFor="let team of Teams">
                     <label class="checkbox-label">
                         <input type="checkbox" class="checkbox-input" (change)="toggleTeamFilter(team)"
@@ -54,6 +56,7 @@
                 <span>({{ getSelected('positions') }})</span>
             </button>
             <div class="dropdown-content" *ngIf="isPositionDropdownOpen">
+                <span (click)="selectAllItems('positions')" class="select-all-label">(de)select all</span>
                 <div *ngFor="let position of Positions">
                     <label class="checkbox-label">
                         <input type="checkbox" class="checkbox-input" (change)="togglePositionFilter(position)"

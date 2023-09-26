@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PlayerListComponent } from './components/player-list/player-list.component';
+import { TeamsListComponent } from './components/teams-list/teams-list.component';
+import { RankingComponent } from './components/ranking/ranking.component';
 
 const routes: Routes = [
-  { path: 'api/players', component: PlayerListComponent },
+  { path: 'players', component: PlayerListComponent },
+  { path: 'teams', component: TeamsListComponent },
+  { path: 'ranking', component: RankingComponent },
 ];
 
 @NgModule({

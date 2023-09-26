@@ -10,6 +10,9 @@ import { StatNameDisplayPipe } from './pipes/statName-display.pipe';
 import { FormsModule } from '@angular/forms';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { PlayerDetailPopupComponent } from './components/player-detail-popup/player-detail-popup.component';
+import { HeaderComponent } from './components/header/header.component';
+import { TeamsListComponent } from './components/teams-list/teams-list.component';
+import { RankingComponent } from './components/ranking/ranking.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import { PlayerDetailPopupComponent } from './components/player-detail-popup/pla
     PositionDisplayPipe,
     StatNameDisplayPipe,
     TeamDisplayPipe,
-    PlayerDetailPopupComponent
+    PlayerDetailPopupComponent,
+    HeaderComponent,
+    TeamsListComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Player } from 'src/app/models/player.model';
 import { PlayerService } from 'src/app/services/player.service';
-import { StatName } from 'src/app/models/statName.enum';
+import { StatName, getStatNameCategory } from 'src/app/models/statName.enum';
 import { Team } from 'src/app/models/team.enum';
 import { Position } from 'src/app/models/position.enum';
 
@@ -18,6 +18,7 @@ export class PlayerListComponent {
   selectedStats: Set<StatName> = new Set(); // Initialize selectedStats Set
   preSelectedStats: StatName[] = [StatName.GAME_STARTED]; // Add more if needed
   StatNames: StatName[] = Object.values(StatName);
+  selectedCategory: string | null = null;
 
 
   constructor(private playerService: PlayerService) { }
@@ -146,7 +147,6 @@ export class PlayerListComponent {
     this.isPositionDropdownOpen = !this.isPositionDropdownOpen;
   }
 
-
   filterPlayers(): void {
     this.currentPage = 1;
 
@@ -226,6 +226,49 @@ export class PlayerListComponent {
     }
     this.filterPlayers();
   }
+
+  //add and (de)select all categories
+  getUniqueStatCategories(): string[] {
+    const categories = new Set<string>();
+    this.StatNames.forEach(statName => {
+      const category = getStatNameCategory(statName);
+      if (category) {
+        categories.add(category);
+      }
+    });
+    return Array.from(categories);
+  }
+
+  getStatsInCategory(category: string): StatName[] {
+    return this.StatNames.filter(statName => getStatNameCategory(statName) === category);
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+  }
+
+  toggleCategoryStats(category: string): void {
+    const statsInCategory = this.getStatsInCategory(category);
+
+    if (this.areAllStatsInCategorySelected(statsInCategory)) {
+      this.deselectAllStats(statsInCategory);
+    } else {
+      this.selectAllStats(statsInCategory);
+    }
+  }
+
+  areAllStatsInCategorySelected(statsInCategory: StatName[]): boolean {
+    return statsInCategory.every(stat => this.selectedStats.has(stat));
+  }
+
+  selectAllStats(statsInCategory: StatName[]): void {
+    statsInCategory.forEach(stat => this.selectedStats.add(stat));
+  }
+
+  deselectAllStats(statsInCategory: StatName[]): void {
+    statsInCategory.forEach(stat => this.selectedStats.delete(stat));
+  }
+
 
   //SEARCH FCTION
   searchQuery: string = '';

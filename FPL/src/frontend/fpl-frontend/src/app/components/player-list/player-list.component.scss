@@ -204,3 +204,13 @@ input::placeholder {
   flex-direction: row-reverse;
   margin-top: -5px;
 }
+
+.category-label {
+  cursor: pointer;
+  color: rgb(22, 0, 43);
+  margin-top: 8px;
+  font-size: 80%;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}

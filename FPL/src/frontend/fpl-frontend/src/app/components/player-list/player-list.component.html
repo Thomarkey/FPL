@@ -17,13 +17,16 @@
             </button>
             <div class="dropdown-content" *ngIf="isStatsDropdownOpen">
                 <span (click)="selectAllItems('stats')" class="select-all-label">(de)select all</span>
-                <div *ngFor="let stat of players[0]?.stats | keyvalue">
-                    <label class="checkbox-label">
-                        <input type="checkbox" class="checkbox-input" (change)="toggleStat(castToStatName(stat.key))"
-                            [checked]="selectedStats.has(castToStatName(stat.key))" />
-                        <span class="custom-checkbox"></span>
-                        {{ stat.key | statNameDisplay }}
-                    </label>
+                <div *ngFor="let category of getUniqueStatCategories()">
+                    <div class="category-label" (click)="toggleCategoryStats(category)">{{ category }}</div>
+                    <div *ngFor="let stat of getStatsInCategory(category)">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" (change)="toggleStat(stat)"
+                                [checked]="selectedStats.has(stat)" />
+                            <span class="custom-checkbox"></span>
+                            {{ stat | statNameDisplay }}
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

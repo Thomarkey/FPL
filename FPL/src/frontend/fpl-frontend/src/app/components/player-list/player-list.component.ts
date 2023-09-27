@@ -295,31 +295,7 @@ export class PlayerListComponent {
   }
 
   performSearch(): void {
-    this.currentPage = 1;
-
-    // Store current sorting state
-    const prevSortStatBy = this.sortStatBy;
-    const prevSortColumnBy = this.sortColumnBy;
-    const prevSortDirection = this.sortDirection;
-
-    const lowerCaseQuery = this.searchQuery.toLowerCase();
-    this.filteredPlayers = this.players.filter(player =>
-      player.name.toLowerCase().includes(lowerCaseQuery) &&
-      (this.selectedTeams.size === 0 || this.selectedTeams.has(player.team)) &&
-      (this.selectedPositions.size === 0 || this.selectedPositions.has(player.position))
-    );
-
-    // Reapply sorting
-    this.sortStatBy = prevSortStatBy;
-    this.sortColumnBy = prevSortColumnBy;
-    this.sortDirection = prevSortDirection;
-
-    // Apply sorting function based on sorting type
-    if (this.sortStatBy) {
-      this.statSort();
-    } else if (this.sortColumnBy) {
-      this.columnSort();
-    }
+    this.filterPlayers();
   }
 
   //FILTER DROPDOWN

@@ -4,6 +4,7 @@ import { PlayerService } from 'src/app/services/player.service';
 import { StatName, getStatNameCategory } from 'src/app/models/statName.enum';
 import { Team } from 'src/app/models/team.enum';
 import { Position } from 'src/app/models/position.enum';
+import { TeamService } from 'src/app/services/team.service';
 
 
 @Component({
@@ -14,24 +15,43 @@ import { Position } from 'src/app/models/position.enum';
 export class PlayerListComponent {
 
   players: Player[] = [];
+  Teams: Team[] = Object.values(Team); // Initialize the Teams array with enum values
+  selectedTeams: Set<Team> = new Set(this.Teams);
+
   selectedPlayer: Player | null = null;
   selectedStats: Set<StatName> = new Set(); // Initialize selectedStats Set
   preSelectedStats: StatName[] = [StatName.GAME_STARTED]; // Add more if needed
   StatNames: StatName[] = Object.values(StatName);
   selectedCategory: string | null = null;
+  selectedTeam: Team | null = null;
 
+  filteredPlayers: Player[] = [];
 
-  constructor(private playerService: PlayerService) { }
+  constructor(private playerService: PlayerService, private teamService: TeamService) { }
 
   ngOnInit(): void {
+    // Initialize filteredPlayers with all players
     this.playerService.getAllPlayers().subscribe((data: Player[]) => {
       this.players = data;
       // Initialize selectedStats with pre-selected stats
       this.preSelectedStats.forEach(stat => this.selectedStats.add(stat));
       this.filteredPlayers = [...this.players];
-    });
-  };
 
+      // Subscribe to selected team
+      this.teamService.getSelectedTeam().subscribe((team) => {
+        this.selectedTeam = team;
+        console.log("first selected team: " + this.selectedTeam);
+
+        // If selectedTeam is not null, filter players by team and set correct selectedTeams
+        if (this.selectedTeam !== null) {
+          this.filteredPlayers = this.players.filter(player => player.team === this.selectedTeam);
+          this.selectedTeams = new Set([this.selectedTeam]);
+        }
+      });
+    });
+
+    console.log("selected team: " + this.selectedTeam);
+  }
 
   //SORTING OF COLUMNS
   sortDirection: 'asc' | 'desc' = 'asc';
@@ -92,7 +112,6 @@ export class PlayerListComponent {
     }
   }
 
-
   statSort(): void {
     if (this.sortStatBy) {
       this.filteredPlayers.sort((a, b) => {
@@ -110,15 +129,10 @@ export class PlayerListComponent {
   //FILTER TEAM AND POSITION
 
   Positions: Position[] = Object.values(Position); // Initialize the Positions array with enum values
-  Teams: Team[] = Object.values(Team); // Initialize the Teams array with enum values
-
-  selectedTeams: Set<Team> = new Set(this.Teams);
   selectedPositions: Set<Position> = new Set(this.Positions);
-
 
   isTeamDropdownOpen: boolean = false;
   isPositionDropdownOpen: boolean = false;
-
 
   toggleTeamFilter(team: Team): void {
     if (this.selectedTeams.has(team)) {
@@ -140,7 +154,6 @@ export class PlayerListComponent {
 
   toggleTeamDropdown(): void {
     this.isTeamDropdownOpen = !this.isTeamDropdownOpen;
-
   }
 
   togglePositionDropdown(): void {
@@ -159,7 +172,8 @@ export class PlayerListComponent {
 
     this.filteredPlayers = this.players.filter(player =>
       player.name.toLowerCase().includes(lowerCaseQuery) &&
-      (this.selectedTeams.size === 0 || this.selectedTeams.has(player.team)) &&
+      ((this.selectedTeams.size === 0) || // No selected teams
+        this.selectedTeams.has(player.team)) && // Selected teams in filter
       (this.selectedPositions.size === 0 || this.selectedPositions.has(player.position))
     );
 
@@ -177,23 +191,6 @@ export class PlayerListComponent {
 
   }
 
-  getSelected(key: string): string {
-    const numSelected = key === 'positions' ? this.selectedPositions.size :
-      key === 'teams' ? this.selectedTeams.size :
-        key === 'stats' ? this.selectedStats.size : 0;
-
-    const totalItems = key === 'positions' ? this.Positions.length :
-      key === 'teams' ? this.Teams.length :
-        key === 'stats' ? this.StatNames.length : 0;
-
-    if (numSelected === 0) {
-      return 'none';
-    } else if (numSelected === totalItems) {
-      return 'all';
-    } else {
-      return numSelected.toString();
-    }
-  }
 
   //(de)select label in dropdowns
   selectAllItems(key: string) {
@@ -225,6 +222,24 @@ export class PlayerListComponent {
       });
     }
     this.filterPlayers();
+  }
+
+  getSelected(key: string): string {
+    const numSelected = key === 'positions' ? this.selectedPositions.size :
+      key === 'teams' ? this.selectedTeams.size :
+        key === 'stats' ? this.selectedStats.size : 0;
+
+    const totalItems = key === 'positions' ? this.Positions.length :
+      key === 'teams' ? this.Teams.length :
+        key === 'stats' ? this.StatNames.length : 0;
+
+    if (numSelected === 0) {
+      return 'none';
+    } else if (numSelected === totalItems) {
+      return 'all';
+    } else {
+      return numSelected.toString();
+    }
   }
 
   //add and (de)select all categories
@@ -272,7 +287,7 @@ export class PlayerListComponent {
 
   //SEARCH FCTION
   searchQuery: string = '';
-  filteredPlayers: Player[] = [];
+
 
   clearSearch(): void {
     this.searchQuery = '';
@@ -396,6 +411,5 @@ export class PlayerListComponent {
     this.selectedPlayer = null;
     this.isPlayerDetailPopupOpen = false;
   }
-
 
 }

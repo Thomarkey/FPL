@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Team, getTeamDisplayName } from 'src/app/models/team.enum';
+import { TeamService } from 'src/app/services/team.service';
 
 @Component({
   selector: 'app-teams-list',
@@ -12,8 +13,7 @@ export class TeamsListComponent {
   getTeamDisplayName = getTeamDisplayName;
   showLinksForTeam: string | null = null;
 
-
-  constructor() { }
+  constructor(private teamService: TeamService) { }
 
   toggleRowDetail(team: string) {
     if (this.showLinksForTeam === team) {
@@ -21,6 +21,10 @@ export class TeamsListComponent {
     } else {
       this.showLinksForTeam = team;
     }
+  }
+
+  setSelectedTeam(team: string) {
+    this.teamService.setSelectedTeam(team as Team);
   }
 
 }

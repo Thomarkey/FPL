@@ -40,7 +40,6 @@ export class PlayerListComponent {
       // Subscribe to selected team
       this.teamService.getSelectedTeam().subscribe((team) => {
         this.selectedTeam = team;
-        console.log("first selected team: " + this.selectedTeam);
 
         // If selectedTeam is not null, filter players by team and set correct selectedTeams
         if (this.selectedTeam !== null) {
@@ -49,8 +48,6 @@ export class PlayerListComponent {
         }
       });
     });
-
-    console.log("selected team: " + this.selectedTeam);
   }
 
   //SORTING OF COLUMNS

@@ -13,6 +13,7 @@ import { PlayerDetailPopupComponent } from './components/player-detail-popup/pla
 import { HeaderComponent } from './components/header/header.component';
 import { TeamsListComponent } from './components/teams-list/teams-list.component';
 import { RankingComponent } from './components/ranking/ranking.component';
+import { FixturesComponent } from './components/fixtures/fixtures.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { RankingComponent } from './components/ranking/ranking.component';
     PlayerDetailPopupComponent,
     HeaderComponent,
     TeamsListComponent,
-    RankingComponent
+    RankingComponent,
+    FixturesComponent
   ],
   imports: [
     BrowserModule,

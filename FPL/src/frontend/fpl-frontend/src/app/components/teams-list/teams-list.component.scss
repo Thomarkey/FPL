@@ -1,0 +1,60 @@
+.team-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-list {
+    width: auto;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.table-container {
+    width: auto;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    color: rgb(0, 250, 250) !important;
+    background-color: rgb(22, 0, 43) !important;
+    font-weight: bold;
+    cursor: default;
+}
+
+.team-list tbody tr:hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.team-list td {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.team-list td {
+    text-align: center;
+}
+
+.team-link {
+    font-size: 80%;
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: rgb(22, 0, 43);
+}
+
+.team-link:hover {
+    color: rgb(0, 250, 250);
+    /* Change link color on hover as needed */
+}

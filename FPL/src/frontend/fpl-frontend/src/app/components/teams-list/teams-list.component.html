@@ -1,1 +1,22 @@
-<p>teams-list works!</p>
+<div class="team-list-container">
+    <div class="table-container">
+        <table class="team-list">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let team of teams">
+                    <td (click)="toggleRowDetail(team)">
+                        {{ getTeamDisplayName(team).toUpperCase() }}
+                        <div [style.display]="showLinksForTeam === team ? 'block' : 'none'">
+                            <a [routerLink]="['/players', { team: team }]" class="team-link">Players</a>
+                            <a [routerLink]="['/fixtures', { team: team }]" class="team-link">Fixtures</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

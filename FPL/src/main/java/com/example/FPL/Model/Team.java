@@ -7,7 +7,7 @@ public enum Team {
     KAS_EUPEN("EUP", "Eupen"),
     KRC_GENK("GNK", "Genk"),
     KV_KORTRIJK("KOR", "Kortrijk"),
-    KV_MECHELEN("KVM", "Mechel;en"),
+    KV_MECHELEN("KVM", "Mechelen"),
     KVC_WESTERLO("WES", "Westerlo"),
     OH_LEUVEN("OHL", "Leuven"),
     ROYAL_ANTWERP_FC("ANT", "Antwerp"),

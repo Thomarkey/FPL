@@ -57,5 +57,15 @@ public class ScraperHelper {
         return Team.fromAbbreviation(getExtractedValue(uniquePlayerWithTeamName, 2));
     }
 
+    public static int parseRoundNumberFromString(String input) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(input);
 
+        if (matcher.find()) {
+            String match = matcher.group();
+            return Integer.parseInt(match);
+        } else {
+            return -1; // Default value if no match is found
+        }
+    }
 }
